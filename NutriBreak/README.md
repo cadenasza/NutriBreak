@@ -1,9 +1,9 @@
 # NutriBreak API
 
-Plataforma para promover saúde física e mental no trabalho recomendando pausas inteligentes e cardápios equilibrados.
+Plataforma para promover saÃºde fÃ­sica e mental no trabalho recomendando pausas inteligentes e cardÃ¡pios equilibrados.
 
 ## Objetivo
-Apoiar profissionais (ODS 3 e 8) com registros de usuários, refeições e pausas, além de recomendações (v2) baseadas em humor, nível de energia e tempo de tela.
+Apoiar profissionais (ODS 3 e 8) com registros de usuÃ¡rios, refeiÃ§Ãµes e pausas, alÃ©m de recomendaÃ§Ãµes (v2) baseadas em humor, nÃ­vel de energia e tempo de tela.
 
 ## Tecnologias
 - .NET 8 / ASP.NET Core Web API
@@ -12,12 +12,12 @@ Apoiar profissionais (ODS 3 e 8) com registros de usuários, refeições e pausas, 
 - OpenTelemetry (tracing + metrics console exporter)
 - Health Checks (/health)
 - Swagger com versionamento
-- HATEOAS + Paginação
-- Testes (xUnit) – exemplo inicial
+- HATEOAS + PaginaÃ§Ã£o
+- Testes (xUnit) â€“ exemplo inicial
 
-## Estrutura de Versões
+## Estrutura de VersÃµes
 - v1: CRUD completo de `users`, `meals`, `break-records`.
-- v2: Inclui endpoint de recomendações por usuário: `/api/v2/users/{id}/recommendations`.
+- v2: Inclui endpoint de recomendaÃ§Ãµes por usuÃ¡rio: `/api/v2/users/{id}/recommendations`.
 
 ## Endpoints Principais (v1)
 GET /api/v1/users?pageNumber=1&pageSize=10
@@ -40,25 +40,25 @@ DELETE /api/v1/break-records/{id}
 
 ## Endpoint Novo (v2)
 GET /api/v2/users/{id}/recommendations
-Retorna sugestões de: próxima pausa, intervalo recomendado e tipo de refeição sugerida.
+Retorna sugestÃµes de: prÃ³xima pausa, intervalo recomendado e tipo de refeiÃ§Ã£o sugerida.
 
-## Paginação & HATEOAS
+## PaginaÃ§Ã£o & HATEOAS
 Listagens retornam: total, pageNumber, pageSize, items e links (self, next, prev, create). Recursos possuem links (self, update, delete).
 
 ## Status Codes
 - 200 OK (consultas)
-- 201 Created (criação)
-- 204 NoContent (atualizações/remoções)
-- 400 BadRequest (dados inválidos)
-- 404 NotFound (não encontrado)
+- 201 Created (criaÃ§Ã£o)
+- 204 NoContent (atualizaÃ§Ãµes/remoÃ§Ãµes)
+- 400 BadRequest (dados invÃ¡lidos)
+- 404 NotFound (nÃ£o encontrado)
 - 409 Conflict (duplicidade de e-mail)
 
 ## Health Check
 GET /health
-Retorna estado da conexão SQL Server.
+Retorna estado da conexÃ£o SQL Server.
 
 ## Observabilidade
-OpenTelemetry configurado com instrumentação ASP.NET Core e HTTP + exportador console. Ajuste para Jaeger/OTLP em produção.
+OpenTelemetry configurado com instrumentaÃ§Ã£o ASP.NET Core e HTTP + exportador console. Ajuste para Jaeger/OTLP em produÃ§Ã£o.
 
 ## Migrations & Banco
 Configurar `ConnectionStrings:DefaultConnection` em `appsettings.json`.
@@ -77,11 +77,5 @@ Executar:
 dotnet test
 ```
 
-## Próximos Passos
-- Persistir recomendações com histórico.
-- Autenticação/JWT.
-- Exportar métricas para Prometheus.
-- Cobertura de testes ampliada.
-
-## Licença
-Uso acadêmico / demonstração.
+## LicenÃ§a
+Uso acadÃªmico / demonstraÃ§Ã£o.
