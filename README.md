@@ -77,5 +77,10 @@ Executar:
 dotnet test
 ```
 
+## Integrantes
+Leonardo Cadena - RM557528
+Gustavo
+Alice Teixeira Caldeira - RM556293
+
 ## Licença
 Uso acadêmico / demonstração.
