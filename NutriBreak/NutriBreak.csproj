@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,20 +13,46 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.6" />
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.0.0" />
     <PackageReference Include="Asp.Versioning.Http" Version="8.0.0" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.0.0" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.8.1" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.14" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc9.14" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0" />
     <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.8.1" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.0.0-rc9.14" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="8.0.0" />
+    <PackageReference Include="xunit" Version="2.6.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.6" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
   </ItemGroup>
 
-  <!-- Exclude test sources from web project build -->
+  <!-- Incluir explicitamente fontes principais -->
   <ItemGroup>
-    <Compile Remove="Tests\**\*.cs" />
+    <Compile Include="Domain\User.cs" />
+    <Compile Include="Domain\Meal.cs" />
+    <Compile Include="Domain\BreakRecord.cs" />
+    <Compile Include="DTOs\UserDto.cs" />
+    <Compile Include="DTOs\MealDto.cs" />
+    <Compile Include="DTOs\BreakRecordDto.cs" />
+    <Compile Include="DTOs\PaginationParameters.cs" />
+    <Compile Include="Persistence\NutriBreakDbContext.cs" />
+    <Compile Include="Infrastructure\Swagger\ConfigureSwaggerOptions.cs" />
+    <Compile Include="Controllers\v1\UsersController.cs" />
+    <Compile Include="Controllers\v1\MealsController.cs" />
+    <Compile Include="Controllers\v1\BreakRecordsController.cs" />
+    <Compile Include="Controllers\v2\UserRecommendationsController.cs" />
+    <Compile Include="Program.cs" />
+  </ItemGroup>
+
+  <!-- Testes -->
+  <ItemGroup>
+    <Compile Include="TestsNew\GlobalUsings.cs" />
+    <Compile Include="TestsNew\TestBase.cs" />
+    <Compile Include="TestsNew\UsersControllerTests.cs" />
+    <Compile Include="TestsNew\MealsControllerTests.cs" />
+    <Compile Include="TestsNew\BreakRecordsControllerTests.cs" />
+    <Compile Include="TestsNew\UserRecommendationsControllerTests.cs" />
   </ItemGroup>
 
 </Project>

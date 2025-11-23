@@ -42,7 +42,7 @@ public class BreakRecordsController : ControllerBase
                 self = Url.Action(null, null, new { pageNumber = pagination.PageNumber, pageSize = pagination.PageSize }, Request.Scheme),
                 next = pagination.PageNumber * pagination.PageSize < total ? Url.Action(null, null, new { pageNumber = pagination.PageNumber + 1, pageSize = pagination.PageSize }, Request.Scheme) : null,
                 prev = pagination.PageNumber > 1 ? Url.Action(null, null, new { pageNumber = pagination.PageNumber - 1, pageSize = pagination.PageSize }, Request.Scheme) : null,
-                create = _links.GetPathByAction(HttpContext, nameof(CreateBreak), "BreakRecords", new { version = HttpContext.GetRequestedApiVersion() })
+                create = _links.GetPathByAction(HttpContext, nameof(CreateBreak), "BreakRecords", new { version = HttpContext.GetRequestedApiVersion()?.ToString() })
             }
         };
         return Ok(result);
@@ -56,9 +56,9 @@ public class BreakRecordsController : ControllerBase
         var dto = new BreakRecordDto(breakRecord.Id, breakRecord.UserId, breakRecord.StartedAt, breakRecord.DurationMinutes, breakRecord.Type, breakRecord.Mood, breakRecord.EnergyLevel, breakRecord.ScreenTimeMinutes);
         var links = new
         {
-            self = _links.GetPathByAction(HttpContext, nameof(GetBreak), "BreakRecords", new { id, version = HttpContext.GetRequestedApiVersion() }),
-            update = _links.GetPathByAction(HttpContext, nameof(UpdateBreak), "BreakRecords", new { id, version = HttpContext.GetRequestedApiVersion() }),
-            delete = _links.GetPathByAction(HttpContext, nameof(DeleteBreak), "BreakRecords", new { id, version = HttpContext.GetRequestedApiVersion() })
+            self = _links.GetPathByAction(HttpContext, nameof(GetBreak), "BreakRecords", new { id, version = HttpContext.GetRequestedApiVersion()?.ToString() }),
+            update = _links.GetPathByAction(HttpContext, nameof(UpdateBreak), "BreakRecords", new { id, version = HttpContext.GetRequestedApiVersion()?.ToString() }),
+            delete = _links.GetPathByAction(HttpContext, nameof(DeleteBreak), "BreakRecords", new { id, version = HttpContext.GetRequestedApiVersion()?.ToString() })
         };
         return Ok(new { data = dto, links });
     }
@@ -79,7 +79,9 @@ public class BreakRecordsController : ControllerBase
         };
         _db.BreakRecords.Add(br);
         await _db.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetBreak), new { id = br.Id, version = HttpContext.GetRequestedApiVersion() }, new { id = br.Id });
+        var apiVersion = HttpContext.GetRequestedApiVersion()?.ToString();
+        var dto = new BreakRecordDto(br.Id, br.UserId, br.StartedAt, br.DurationMinutes, br.Type, br.Mood, br.EnergyLevel, br.ScreenTimeMinutes);
+        return CreatedAtAction(nameof(GetBreak), new { id = br.Id, version = apiVersion }, dto);
     }
 
     [HttpPut("{id:guid}")]

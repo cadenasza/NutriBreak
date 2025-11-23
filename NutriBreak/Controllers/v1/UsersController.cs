@@ -43,7 +43,7 @@ public class UsersController : ControllerBase
                 self = Url.Action(null, null, new { pageNumber = pagination.PageNumber, pageSize = pagination.PageSize }, Request.Scheme),
                 next = pagination.PageNumber * pagination.PageSize < total ? Url.Action(null, null, new { pageNumber = pagination.PageNumber + 1, pageSize = pagination.PageSize }, Request.Scheme) : null,
                 prev = pagination.PageNumber > 1 ? Url.Action(null, null, new { pageNumber = pagination.PageNumber - 1, pageSize = pagination.PageSize }, Request.Scheme) : null,
-                create = _links.GetPathByAction(HttpContext, action: nameof(CreateUser), controller: "Users", values: new { version = HttpContext.GetRequestedApiVersion() })
+                create = _links.GetPathByAction(HttpContext, action: nameof(CreateUser), controller: "Users", values: new { version = HttpContext.GetRequestedApiVersion()?.ToString() })
             }
         };
 
@@ -58,9 +58,9 @@ public class UsersController : ControllerBase
         var dto = new UserDto(user.Id, user.Name, user.Email, user.WorkMode);
         var links = new
         {
-            self = _links.GetPathByAction(HttpContext, nameof(GetById), "Users", new { id, version = HttpContext.GetRequestedApiVersion() }),
-            update = _links.GetPathByAction(HttpContext, nameof(UpdateUser), "Users", new { id, version = HttpContext.GetRequestedApiVersion() }),
-            delete = _links.GetPathByAction(HttpContext, nameof(DeleteUser), "Users", new { id, version = HttpContext.GetRequestedApiVersion() })
+            self = _links.GetPathByAction(HttpContext, nameof(GetById), "Users", new { id, version = HttpContext.GetRequestedApiVersion()?.ToString() }),
+            update = _links.GetPathByAction(HttpContext, nameof(UpdateUser), "Users", new { id, version = HttpContext.GetRequestedApiVersion()?.ToString() }),
+            delete = _links.GetPathByAction(HttpContext, nameof(DeleteUser), "Users", new { id, version = HttpContext.GetRequestedApiVersion()?.ToString() })
         };
         return Ok(new { data = dto, links });
     }
@@ -73,7 +73,9 @@ public class UsersController : ControllerBase
         var user = new User { Name = request.Name, Email = request.Email, WorkMode = request.WorkMode };
         _db.Users.Add(user);
         await _db.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetById), new { id = user.Id, version = HttpContext.GetRequestedApiVersion() }, new { id = user.Id });
+        var apiVersion = HttpContext.GetRequestedApiVersion()?.ToString();
+        var dto = new UserDto(user.Id, user.Name, user.Email, user.WorkMode);
+        return CreatedAtAction(nameof(GetById), new { id = user.Id, version = apiVersion }, dto);
     }
 
     [HttpPut("{id:guid}")]

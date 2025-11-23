@@ -42,7 +42,7 @@ public class MealsController : ControllerBase
                 self = Url.Action(null, null, new { pageNumber = pagination.PageNumber, pageSize = pagination.PageSize }, Request.Scheme),
                 next = pagination.PageNumber * pagination.PageSize < total ? Url.Action(null, null, new { pageNumber = pagination.PageNumber + 1, pageSize = pagination.PageSize }, Request.Scheme) : null,
                 prev = pagination.PageNumber > 1 ? Url.Action(null, null, new { pageNumber = pagination.PageNumber - 1, pageSize = pagination.PageSize }, Request.Scheme) : null,
-                create = _links.GetPathByAction(HttpContext, nameof(CreateMeal), "Meals", new { version = HttpContext.GetRequestedApiVersion() })
+                create = _links.GetPathByAction(HttpContext, nameof(CreateMeal), "Meals", new { version = HttpContext.GetRequestedApiVersion()?.ToString() })
             }
         };
         return Ok(result);
@@ -56,9 +56,9 @@ public class MealsController : ControllerBase
         var dto = new MealDto(meal.Id, meal.UserId, meal.Title, meal.Calories, meal.TimeOfDay);
         var links = new
         {
-            self = _links.GetPathByAction(HttpContext, nameof(GetMeal), "Meals", new { id, version = HttpContext.GetRequestedApiVersion() }),
-            update = _links.GetPathByAction(HttpContext, nameof(UpdateMeal), "Meals", new { id, version = HttpContext.GetRequestedApiVersion() }),
-            delete = _links.GetPathByAction(HttpContext, nameof(DeleteMeal), "Meals", new { id, version = HttpContext.GetRequestedApiVersion() })
+            self = _links.GetPathByAction(HttpContext, nameof(GetMeal), "Meals", new { id, version = HttpContext.GetRequestedApiVersion()?.ToString() }),
+            update = _links.GetPathByAction(HttpContext, nameof(UpdateMeal), "Meals", new { id, version = HttpContext.GetRequestedApiVersion()?.ToString() }),
+            delete = _links.GetPathByAction(HttpContext, nameof(DeleteMeal), "Meals", new { id, version = HttpContext.GetRequestedApiVersion()?.ToString() })
         };
         return Ok(new { data = dto, links });
     }
@@ -71,7 +71,9 @@ public class MealsController : ControllerBase
         var meal = new Meal { UserId = request.UserId, Title = request.Title, Calories = request.Calories, TimeOfDay = request.TimeOfDay };
         _db.Meals.Add(meal);
         await _db.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetMeal), new { id = meal.Id, version = HttpContext.GetRequestedApiVersion() }, new { id = meal.Id });
+        var apiVersion = HttpContext.GetRequestedApiVersion()?.ToString();
+        var dto = new MealDto(meal.Id, meal.UserId, meal.Title, meal.Calories, meal.TimeOfDay);
+        return CreatedAtAction(nameof(GetMeal), new { id = meal.Id, version = apiVersion }, dto);
     }
 
     [HttpPut("{id:guid}")]
