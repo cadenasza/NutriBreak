@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace NutriBreak.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class DecimalIdsInitial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,10 +15,10 @@ namespace NutriBreak.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    WorkMode = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<decimal>(type: "DECIMAL(18,2)", precision: 18, scale: 2, nullable: false),
+                    Name = table.Column<string>(type: "NVARCHAR2(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "NVARCHAR2(200)", maxLength: 200, nullable: false),
+                    WorkMode = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,14 +29,14 @@ namespace NutriBreak.Migrations
                 name: "BreakRecords",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StartedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DurationMinutes = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Mood = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    EnergyLevel = table.Column<int>(type: "int", nullable: false),
-                    ScreenTimeMinutes = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<decimal>(type: "DECIMAL(18,2)", precision: 18, scale: 2, nullable: false),
+                    UserId = table.Column<decimal>(type: "DECIMAL(18,2)", precision: 18, scale: 2, nullable: false),
+                    StartedAt = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    DurationMinutes = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    Type = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: false),
+                    Mood = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: false),
+                    EnergyLevel = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    ScreenTimeMinutes = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,11 +53,11 @@ namespace NutriBreak.Migrations
                 name: "Meals",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
-                    Calories = table.Column<int>(type: "int", nullable: false),
-                    TimeOfDay = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<decimal>(type: "DECIMAL(18,2)", precision: 18, scale: 2, nullable: false),
+                    UserId = table.Column<decimal>(type: "DECIMAL(18,2)", precision: 18, scale: 2, nullable: false),
+                    Title = table.Column<string>(type: "NVARCHAR2(120)", maxLength: 120, nullable: false),
+                    Calories = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    TimeOfDay = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -50,8 +50,8 @@ public class UsersController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id:guid}")]
-    public async Task<ActionResult<object>> GetById(Guid id)
+    [HttpGet("{id:decimal}")]
+    public async Task<ActionResult<object>> GetById(decimal id)
     {
         var user = await _db.Users.FindAsync(id);
         if (user == null) return NotFound();
@@ -68,9 +68,11 @@ public class UsersController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<object>> CreateUser([FromBody] CreateUserRequest request)
     {
+        var idExists = await _db.Users.AnyAsync(x => x.Id == request.Id);
+        if (idExists) return Conflict(new { message = "Id already exists" });
         var exists = await _db.Users.AnyAsync(x => x.Email == request.Email);
         if (exists) return Conflict(new { message = "Email already registered" });
-        var user = new User { Name = request.Name, Email = request.Email, WorkMode = request.WorkMode };
+        var user = new User { Id = request.Id, Name = request.Name, Email = request.Email, WorkMode = request.WorkMode };
         _db.Users.Add(user);
         await _db.SaveChangesAsync();
         var apiVersion = HttpContext.GetRequestedApiVersion()?.ToString();
@@ -78,8 +80,8 @@ public class UsersController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = user.Id, version = apiVersion }, dto);
     }
 
-    [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserRequest request)
+    [HttpPut("{id:decimal}")]
+    public async Task<IActionResult> UpdateUser(decimal id, [FromBody] UpdateUserRequest request)
     {
         var user = await _db.Users.FindAsync(id);
         if (user == null) return NotFound();
@@ -89,8 +91,8 @@ public class UsersController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteUser(Guid id)
+    [HttpDelete("{id:decimal}")]
+    public async Task<IActionResult> DeleteUser(decimal id)
     {
         var user = await _db.Users.FindAsync(id);
         if (user == null) return NotFound();

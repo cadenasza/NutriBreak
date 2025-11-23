@@ -13,10 +13,10 @@ public class UsersControllerTests : TestBase
         var ctx = CreateDbContext();
         var http = CreateVersionedHttpContext();
         var controller = new UsersController(ctx, CreateLinkGenerator()) { ControllerContext = new ControllerContext { HttpContext = http } };
-        var request = new CreateUserRequest("John Doe", "john@example.com", "remoto");
+        var request = new CreateUserRequest(1.0m, "John Doe", "john@example.com", "remoto");
         var result = await controller.CreateUser(request);
         var created = Assert.IsType<CreatedAtActionResult>(result.Result);
-        Assert.NotNull(created.RouteValues["id"]);
+        Assert.Equal(1.0m, created.RouteValues["id"]);
     }
 
     [Fact]
@@ -25,7 +25,7 @@ public class UsersControllerTests : TestBase
         var ctx = CreateDbContext();
         var http = CreateVersionedHttpContext();
         var controller = new UsersController(ctx, CreateLinkGenerator()) { ControllerContext = new ControllerContext { HttpContext = http } };
-        var response = await controller.GetById(Guid.NewGuid());
+        var response = await controller.GetById(999m);
         Assert.IsType<NotFoundResult>(response.Result);
     }
 }

@@ -48,8 +48,8 @@ public class MealsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id:guid}")]
-    public async Task<ActionResult<object>> GetMeal(Guid id)
+    [HttpGet("{id:decimal}")]
+    public async Task<ActionResult<object>> GetMeal(decimal id)
     {
         var meal = await _db.Meals.FindAsync(id);
         if (meal == null) return NotFound();
@@ -66,9 +66,11 @@ public class MealsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<object>> CreateMeal([FromBody] CreateMealRequest request)
     {
+        var idExists = await _db.Meals.AnyAsync(x => x.Id == request.Id);
+        if (idExists) return Conflict(new { message = "Id already exists" });
         var userExists = await _db.Users.AnyAsync(x => x.Id == request.UserId);
         if (!userExists) return BadRequest(new { message = "User does not exist" });
-        var meal = new Meal { UserId = request.UserId, Title = request.Title, Calories = request.Calories, TimeOfDay = request.TimeOfDay };
+        var meal = new Meal { Id = request.Id, UserId = request.UserId, Title = request.Title, Calories = request.Calories, TimeOfDay = request.TimeOfDay };
         _db.Meals.Add(meal);
         await _db.SaveChangesAsync();
         var apiVersion = HttpContext.GetRequestedApiVersion()?.ToString();
@@ -76,8 +78,8 @@ public class MealsController : ControllerBase
         return CreatedAtAction(nameof(GetMeal), new { id = meal.Id, version = apiVersion }, dto);
     }
 
-    [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateMeal(Guid id, [FromBody] UpdateMealRequest request)
+    [HttpPut("{id:decimal}")]
+    public async Task<IActionResult> UpdateMeal(decimal id, [FromBody] UpdateMealRequest request)
     {
         var meal = await _db.Meals.FindAsync(id);
         if (meal == null) return NotFound();
@@ -88,8 +90,8 @@ public class MealsController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteMeal(Guid id)
+    [HttpDelete("{id:decimal}")]
+    public async Task<IActionResult> DeleteMeal(decimal id)
     {
         var meal = await _db.Meals.FindAsync(id);
         if (meal == null) return NotFound();

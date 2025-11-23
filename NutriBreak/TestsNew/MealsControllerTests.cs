@@ -11,14 +11,14 @@ public class MealsControllerTests : TestBase
     public async Task CreateMeal_ShouldReturnCreated()
     {
         var ctx = CreateDbContext();
-        var user = new NutriBreak.Domain.User { Name = "Jane", Email = "jane@example.com", WorkMode = "remoto" };
+        var user = new NutriBreak.Domain.User { Id = 10m, Name = "Jane", Email = "jane@example.com", WorkMode = "remoto" };
         ctx.Users.Add(user);
         await ctx.SaveChangesAsync();
         var http = CreateVersionedHttpContext();
         var controller = new MealsController(ctx, CreateLinkGenerator()) { ControllerContext = new ControllerContext { HttpContext = http } };
-        var request = new CreateMealRequest(user.Id, "Almoço", 600, "lunch");
+        var request = new CreateMealRequest(100m, user.Id, "Almoço", 600, "lunch");
         var result = await controller.CreateMeal(request);
         var created = Assert.IsType<CreatedAtActionResult>(result.Result);
-        Assert.NotNull(created.RouteValues["id"]);
+        Assert.Equal(100m, created.RouteValues["id"]);
     }
 }

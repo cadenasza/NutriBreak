@@ -11,14 +11,14 @@ public class BreakRecordsControllerTests : TestBase
     public async Task CreateBreak_ShouldReturnCreated()
     {
         var ctx = CreateDbContext();
-        var user = new NutriBreak.Domain.User { Name = "Joao", Email = "joao@example.com", WorkMode = "remoto" };
+        var user = new NutriBreak.Domain.User { Id = 20m, Name = "Joao", Email = "joao@example.com", WorkMode = "remoto" };
         ctx.Users.Add(user);
         await ctx.SaveChangesAsync();
         var http = CreateVersionedHttpContext();
         var controller = new BreakRecordsController(ctx, CreateLinkGenerator()) { ControllerContext = new ControllerContext { HttpContext = http } };
-        var request = new CreateBreakRecordRequest(user.Id, 10, "pausa curta", "feliz", 7, 30);
+        var request = new CreateBreakRecordRequest(200m, user.Id, 10, "pausa curta", "feliz", 7, 30);
         var result = await controller.CreateBreak(request);
         var created = Assert.IsType<CreatedAtActionResult>(result.Result);
-        Assert.NotNull(created.RouteValues["id"]);
+        Assert.Equal(200m, created.RouteValues["id"]);
     }
 }

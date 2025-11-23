@@ -2,7 +2,7 @@ namespace NutriBreak.Domain;
 
 public class User
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public decimal Id { get; set; } // definido pelo usuário
     public string Name { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string WorkMode { get; set; } = string.Empty; // remoto, hibrido, presencial

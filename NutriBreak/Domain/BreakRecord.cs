@@ -2,8 +2,8 @@ namespace NutriBreak.Domain;
 
 public class BreakRecord
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid UserId { get; set; }
+    public decimal Id { get; set; } // definido pelo usuário
+    public decimal UserId { get; set; }
     public User? User { get; set; }
     public DateTime StartedAt { get; set; } = DateTime.UtcNow;
     public int DurationMinutes { get; set; }

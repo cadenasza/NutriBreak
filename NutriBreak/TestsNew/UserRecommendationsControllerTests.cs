@@ -12,7 +12,7 @@ public class UserRecommendationsControllerTests : TestBase
         var ctx = CreateDbContext();
         var http = CreateVersionedHttpContext("2.0");
         var controller = new UserRecommendationsController(ctx) { ControllerContext = new ControllerContext { HttpContext = http } };
-        var result = await controller.GetRecommendations(Guid.NewGuid());
+        var result = await controller.GetRecommendations(999m);
         Assert.IsType<NotFoundResult>(result);
     }
 
@@ -20,13 +20,13 @@ public class UserRecommendationsControllerTests : TestBase
     public async Task Recommendations_ShouldReturnOk_ForExistingUser()
     {
         var ctx = CreateDbContext();
-        var user = new NutriBreak.Domain.User { Name = "Ana", Email = "ana@example.com", WorkMode = "remoto" };
+        var user = new NutriBreak.Domain.User { Id = 30m, Name = "Ana", Email = "ana@example.com", WorkMode = "remoto" };
         ctx.Users.Add(user);
         await ctx.SaveChangesAsync();
         var http = CreateVersionedHttpContext("2.0");
         var controller = new UserRecommendationsController(ctx) { ControllerContext = new ControllerContext { HttpContext = http } };
         var result = await controller.GetRecommendations(user.Id);
         var ok = Assert.IsType<OkObjectResult>(result);
-        Assert.Contains("userId", ok.Value!.ToString());
+        Assert.Contains("\"userId\": 30", ok.Value!.ToString());
     }
 }

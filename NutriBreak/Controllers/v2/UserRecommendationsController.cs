@@ -7,14 +7,14 @@ namespace NutriBreak.Controllers.v2;
 
 [ApiController]
 [ApiVersion("2.0")]
-[Route("api/v{version:apiVersion}/users/{id:guid}/recommendations")]
+[Route("api/v{version:apiVersion}/users/{id:decimal}/recommendations")]
 public class UserRecommendationsController : ControllerBase
 {
     private readonly NutriBreakDbContext _db;
     public UserRecommendationsController(NutriBreakDbContext db) => _db = db;
 
     [HttpGet]
-    public async Task<IActionResult> GetRecommendations(Guid id)
+    public async Task<IActionResult> GetRecommendations(decimal id)
     {
         var user = await _db.Users.FindAsync(id);
         if (user == null) return NotFound();

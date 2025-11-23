@@ -9,9 +9,9 @@ using NutriBreak.Infrastructure.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Database
+// Database (Oracle)
 builder.Services.AddDbContext<NutriBreakDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseOracle(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Controllers + HATEOAS
 builder.Services.AddControllers();
@@ -36,7 +36,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
-// OpenTelemetry (removed sqlclient instrumentation due to missing extension in current package set)
+// OpenTelemetry
 builder.Services.AddOpenTelemetry()
     .ConfigureResource(r => r.AddService("NutriBreak.API"))
     .WithTracing(t => t
@@ -48,9 +48,9 @@ builder.Services.AddOpenTelemetry()
         .AddHttpClientInstrumentation()
         .AddConsoleExporter());
 
-// Health Checks (DB)
+// Health Checks (Oracle)
 builder.Services.AddHealthChecks()
-    .AddSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), name: "sqlserver");
+    .AddOracle(builder.Configuration.GetConnectionString("DefaultConnection"), name: "oracle");
 
 var app = builder.Build();
 

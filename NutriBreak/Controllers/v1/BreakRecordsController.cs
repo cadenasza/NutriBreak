@@ -48,8 +48,8 @@ public class BreakRecordsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id:guid}")]
-    public async Task<ActionResult<object>> GetBreak(Guid id)
+    [HttpGet("{id:decimal}")]
+    public async Task<ActionResult<object>> GetBreak(decimal id)
     {
         var breakRecord = await _db.BreakRecords.FindAsync(id);
         if (breakRecord == null) return NotFound();
@@ -66,10 +66,13 @@ public class BreakRecordsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<object>> CreateBreak([FromBody] CreateBreakRecordRequest request)
     {
+        var idExists = await _db.BreakRecords.AnyAsync(x => x.Id == request.Id);
+        if (idExists) return Conflict(new { message = "Id already exists" });
         var userExists = await _db.Users.AnyAsync(x => x.Id == request.UserId);
         if (!userExists) return BadRequest(new { message = "User does not exist" });
         var br = new BreakRecord
         {
+            Id = request.Id,
             UserId = request.UserId,
             DurationMinutes = request.DurationMinutes,
             Type = request.Type,
@@ -84,8 +87,8 @@ public class BreakRecordsController : ControllerBase
         return CreatedAtAction(nameof(GetBreak), new { id = br.Id, version = apiVersion }, dto);
     }
 
-    [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateBreak(Guid id, [FromBody] UpdateBreakRecordRequest request)
+    [HttpPut("{id:decimal}")]
+    public async Task<IActionResult> UpdateBreak(decimal id, [FromBody] UpdateBreakRecordRequest request)
     {
         var br = await _db.BreakRecords.FindAsync(id);
         if (br == null) return NotFound();
@@ -98,8 +101,8 @@ public class BreakRecordsController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteBreak(Guid id)
+    [HttpDelete("{id:decimal}")]
+    public async Task<IActionResult> DeleteBreak(decimal id)
     {
         var br = await _db.BreakRecords.FindAsync(id);
         if (br == null) return NotFound();
