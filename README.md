@@ -79,7 +79,7 @@ dotnet test
 
 ## Integrantes
 Leonardo Cadena - RM557528
-Gustavo
+Gustavo -  rm555708
 Alice Teixeira Caldeira - RM556293
 
 ## Licença
